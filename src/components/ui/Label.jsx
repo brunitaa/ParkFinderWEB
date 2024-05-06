@@ -1,6 +1,6 @@
 export function Label({ htmlFor, children }) {
   return (
-    <label htmlFor={htmlFor} className="block text-red-900 text-sm font-bold mb-2">
+    <label htmlFor={htmlFor} className="text-xs block my-1 text-slate-300">
       {children}
     </label>
   );

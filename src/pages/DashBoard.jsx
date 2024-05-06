@@ -1,33 +1,31 @@
 import React, { useEffect } from "react";
-import { useOfertantes } from "../context/pruebas";
+import { useBidders } from "../context/top";
 import "@coreui/coreui/dist/css/coreui.min.css";
-import { CRow, CCol, CWidgetStatsB } from "@coreui/react";
+import {
+  CRow,
+  CCol,
+  CWidgetStatsB,
+  CCard,
+  CCardBody,
+  CCardTitle,
+  CCardText,
+} from "@coreui/react";
+import StarRating from "../components/stars";
+import { useUsers } from "../context/topUser";
 
 const Dashboard = () => {
-  const { ofertantes, getOfertantes } = useOfertantes();
+  const { bidders, getBidders } = useBidders();
+  const { users, getUsers } = useUsers();
 
   useEffect(() => {
-    getOfertantes();
+    getBidders();
+    getUsers();
   }, []);
 
   // Verifica si ofertantes es un array antes de mapearlo
-  if (!Array.isArray(ofertantes)) {
+  if (!Array.isArray(bidders)) {
     return <p>Cargando...</p>;
   }
-
-  // Supongamos que tienes datos de usuarios y ofertantes con ratings y rechazos
-  const usuarios = [
-    { nombre: "Usuario 1", rating: 4.5, rechazos: 2 },
-    { nombre: "Usuario 2", rating: 3.8, rechazos: 5 },
-    // Más usuarios aquí...
-  ];
-
-  const topUsuarios = usuarios.sort((a, b) => b.rating - a.rating).slice(0, 20);
-
-  const rechazosClientes = usuarios.reduce(
-    (total, usuario) => total + usuario.rechazos,
-    0
-  );
 
   return (
     <>
@@ -36,36 +34,37 @@ const Dashboard = () => {
       {/* Sección de top 20 Usuarios */}
       <CRow id="Top20">
         <CCol md={6} className="mb-4">
-          <h2>Top 20 Usuarios</h2>
-          {topUsuarios.map((usuario, index) => (
-            <CWidgetStatsB
-              key={index}
-              className="mb-2"
-              progress={{ color: "info", value: usuario.rating * 10 }}
-              text={`Rating: ${usuario.rating}`}
-              title={usuario.nombre}
-              value={usuario.rating}
-            />
+          <h2>Top 20 Clientes</h2>
+          {users.map((user, index) => (
+            <CCard key={index} className="mb-2">
+              <CCardBody>
+                <CCardTitle>{user.username}</CCardTitle>
+                <div style={{ display: "flex" }}>
+                  <StarRating rating={user.customer_rating} />
+                </div>
+                <CCardText>Rating: {user.customer_rating}</CCardText>
+              </CCardBody>
+            </CCard>
           ))}
         </CCol>
-        {/* Sección de top 20 Ofertantes */}
         <CCol md={6} className="mb-4">
           <h2>Top 20 Ofertantes</h2>
-          {ofertantes.map((ofertante, index) => (
-            <CWidgetStatsB
-              key={index}
-              className="mb-2"
-              progress={{ color: "success", value: ofertante.puntuacion * 10 }}
-              text={`Rating: ${ofertante.puntuacion}`}
-              title={ofertante.nombre}
-              value={ofertante.puntuacion}
-            />
+          {bidders.map((bidder, index) => (
+            <CCard key={index} className="mb-2">
+              <CCardBody>
+                <CCardTitle>{bidder.username}</CCardTitle>
+                <div style={{ display: "flex" }}>
+                  <StarRating rating={bidder.bidder_rating} />
+                </div>
+                <CCardText>Rating: {bidder.bidder_rating}</CCardText>
+              </CCardBody>
+            </CCard>
           ))}
         </CCol>
       </CRow>
       {/* Sección de top ofertantes */}
 
-      {/* Sección de rechazos */}
+      {/* Sección de rechazos *
       <div id="rechazos"></div>
       <CRow id="rechazos">
         <CCol md={6} className="mb-4">
@@ -88,7 +87,7 @@ const Dashboard = () => {
             value={rechazosClientes}
           />
         </CCol>
-      </CRow>
+      </CRow>/*/}
     </>
   );
 };

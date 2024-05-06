@@ -1,18 +1,44 @@
-import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 import { ButtonLink } from "./ui/ButtonLink";
-import LogoutButton from "./LogOut";
 
-export function Navbar({ }) {
+export function Navbar() {
+  const { isAuthenticated, logout, user } = useAuth();
+  console.log(isAuthenticated, user);
+
   return (
-    <>
-      <nav className="bg-white border-red-200 dark:bg-red-900">
-        <div className="flex flex-wrap justify-between Ítems-center mx-auto max-w-screen-xl p-4">
-          <a href="/" className="flex Ítems-center space-x-3 rtl:space-x-reverse">
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">SIGEMUV</span>
-          </a>
-        </div>
-      </nav>
-      
-    </>
+    <nav className="bg-zinc-700 my-3 flex justify-between py-5 px-10 rounded-lg">
+      <h1 className="text-2xl font-bold">
+        <Link to={isAuthenticated ? "/dashboard" : "/"}>Park Finder</Link>
+      </h1>
+      <ul className="flex gap-x-2">
+        {isAuthenticated ? (
+          <>
+            <li>
+              <Link to="/dashboard">Best Users</Link>
+            </li>
+
+            <li>
+              <Link to="/worst">Worst Users</Link>
+            </li>
+            <li>
+              <Link to="/stats">Stats</Link>
+            </li>
+
+            <li>
+              <Link to="/" onClick={() => logout()}>
+                Logout
+              </Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <ButtonLink to="/login">Login</ButtonLink>
+            </li>
+          </>
+        )}
+      </ul>
+    </nav>
   );
 }
